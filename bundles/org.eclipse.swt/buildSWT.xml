@@ -44,7 +44,21 @@
 	<property name="file_library" value="bundles/org.eclipse.swt/Eclipse SWT PI/common/org/eclipse/swt/internal/Library.java"/>
 	<property name="file_make_common" value="bundles/org.eclipse.swt/Eclipse SWT/common/library/make_common.mak"/>
 	<property name="file_version" value="bundles/org.eclipse.swt/Eclipse SWT/common/version.txt"/>
-	
+
+	<!-- TODO: fix, temporary hack -->
+	<property name="swt.ws" value="win32"/>
+	<property name="swt.os" value="win32.x86_64"/>
+
+	<!-- TODO: fix, temporary hack (?) -->
+	<path id="javax.classpath">
+		<pathelement location="./ant_libs_js/graal-sdk-23.0.2.jar"/>
+		<pathelement location="./ant_libs_js/js-scriptengine-22.3.1.jar"/>
+		<pathelement location="./ant_libs_js/icu4j-72.1.jar"/>
+		<pathelement location="./ant_libs_js/js-23.0.2.jar"/>
+		<pathelement location="./ant_libs_js/regex-23.0.2.jar"/>
+		<pathelement location="./ant_libs_js/truffle-api-23.0.2.jar"/>
+	</path>
+
 	<target name="check_fragment_libraries" depends="get_version">
 		<echo>Checking ${fragment}</echo>
 		<property name="library_count" value="31"/>
@@ -123,7 +137,7 @@
 		<exec dir="${repo.bin}" executable="git" failonerror="true" outputproperty="tags">
 			<arg line="describe --abbrev=0 --tags --match v[0-9][0-9][0-9][0-9]*"/>
 		</exec>
-		<script language="javascript">
+		<script language="javascript" manager="javax" classpathref="javax.classpath">
 			<![CDATA[
 				tags = project.getProperty("tags").split("\n");
 				project.setProperty("swt_tag", tags[tags.length - 1]);
@@ -137,7 +151,7 @@
 		<exec dir="${repo.bin}" executable="git" failonerror="true" outputproperty="tags">
 			<arg line="tag"/>
 		</exec>
-		<script language="javascript">
+		<script language="javascript" manager="javax" classpathref="javax.classpath">
 			<![CDATA[
 				tags = project.getProperty("tags");
 				swt_version = project.getProperty("swt_version");
@@ -167,7 +181,7 @@
 	<!-- Set swt_version, new_version, (and rev, min_ver, maj_ver, new_rev, new_min_ver, new_maj_ver) from the make_common.mak  -->
 	<target name="get_version" unless="swt_version">
 		<loadproperties srcFile="${repo.src}/${file_make_common}"/>
-		<script language="javascript">
+		<script language="javascript" manager="javax" classpathref="javax.classpath">
 		<![CDATA[
 			rev = project.getProperty("rev");
 			min_ver = project.getProperty("min_ver");
@@ -225,7 +239,7 @@
 			<isset property="swt.arch"/>
 		</condition>
 		<property name="fragment_dir" value="${repo.bin}/binaries/${fragment}"/>
-		<script language="javascript">
+		<script language="javascript" manager="javax" classpathref="javax.classpath">
 			<![CDATA[
 				project.setProperty("library_src", project.getProperty("src_" + project.getProperty("swt.ws")));
 			]]>
@@ -261,7 +275,7 @@
 		
 		<echo>Files to add is ${toString:addid}</echo>
 
-		<script language="javascript">
+		<script language="javascript" manager="javax" classpathref="javax.classpath">
 		<![CDATA[
 			rfiles = project.getProperty("rfiles");
 			if (rfiles.length() > 0) {
@@ -308,7 +322,7 @@
 	</target>
 
 	<target name="copy.library.src">
-		<script language="javascript">
+		<script language="javascript" manager="javax" classpathref="javax.classpath">
 			<![CDATA[
 				var File = java.io.File;
 				var StreamTokenizer = java.io.StreamTokenizer;
@@ -373,6 +387,8 @@
 		<exec dir="${build_dir}" executable="${build_dir}/build.bat" failonerror="true">
 			<env key="SWT_JAVA_HOME" value="${SWT_JAVA_HOME}"/>
 			<env key="OUTPUT_DIR" value="${win_output_dir}"/>
+			<arg line="x86_64"/>
+			<arg line="all"/>
 			<arg line="${targets}"/>
 			<arg line="${clean}"/>
 		</exec>

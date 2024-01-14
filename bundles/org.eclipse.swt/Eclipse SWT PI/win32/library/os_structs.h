@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2021 IBM Corporation and others.
+ * Copyright (c) 2000, 2024 IBM Corporation and others.
  *
  * This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
@@ -1119,6 +1119,18 @@ void setSCRIPT_CONTROLFields(JNIEnv *env, jobject lpObject, SCRIPT_CONTROL *lpSt
 #define getSCRIPT_CONTROLFields(a,b,c) NULL
 #define setSCRIPT_CONTROLFields(a,b,c)
 #define SCRIPT_CONTROL_sizeof() 0
+#endif
+
+#ifndef NO_SCRIPT_DIGITSUBSTITUTE
+void cacheSCRIPT_DIGITSUBSTITUTEFields(JNIEnv *env, jobject lpObject);
+SCRIPT_DIGITSUBSTITUTE *getSCRIPT_DIGITSUBSTITUTEFields(JNIEnv *env, jobject lpObject, SCRIPT_DIGITSUBSTITUTE *lpStruct);
+void setSCRIPT_DIGITSUBSTITUTEFields(JNIEnv *env, jobject lpObject, SCRIPT_DIGITSUBSTITUTE *lpStruct);
+#define SCRIPT_DIGITSUBSTITUTE_sizeof() sizeof(SCRIPT_DIGITSUBSTITUTE)
+#else
+#define cacheSCRIPT_DIGITSUBSTITUTEFields(a,b)
+#define getSCRIPT_DIGITSUBSTITUTEFields(a,b,c) NULL
+#define setSCRIPT_DIGITSUBSTITUTEFields(a,b,c)
+#define SCRIPT_DIGITSUBSTITUTE_sizeof() 0
 #endif
 
 #ifndef NO_SCRIPT_FONTPROPERTIES

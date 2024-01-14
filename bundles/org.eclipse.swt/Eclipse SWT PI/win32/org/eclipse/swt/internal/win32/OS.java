@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2022 IBM Corporation and others.
+ * Copyright (c) 2000, 2024 IBM Corporation and others.
  *
  * This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
@@ -1192,6 +1192,10 @@ public class OS extends C {
 	public static final int SCRBS_HOT = 2;
 	public static final int SCRBS_PRESSED = 3;
 	public static final int SCRBS_DISABLED = 4;
+	public static final int SCRIPT_DIGITSUBSTITUTE_CONTEXT = 0;
+	public static final int SCRIPT_DIGITSUBSTITUTE_NONE = 1;
+	public static final int SCRIPT_DIGITSUBSTITUTE_NATIONAL = 2;
+	public static final int SCRIPT_DIGITSUBSTITUTE_TRADITIONAL = 3;
 	public static final int SET_FEATURE_ON_PROCESS = 0x2;
 	public static final int SHADEBLENDCAPS = 120;
 	public static final int SHGFI_ICON = 0x000000100;
@@ -1969,6 +1973,7 @@ public static final native int SAFEARRAY_sizeof ();
 public static final native int SAFEARRAYBOUND_sizeof ();
 public static final native int SCRIPT_ANALYSIS_sizeof ();
 public static final native int SCRIPT_CONTROL_sizeof ();
+public static final native int SCRIPT_DIGITSUBSTITUTE_sizeof ();
 public static final native int SCRIPT_FONTPROPERTIES_sizeof ();
 public static final native int SCRIPT_ITEM_sizeof ();
 public static final native int SCRIPT_LOGATTR_sizeof ();
@@ -3932,7 +3937,7 @@ public static final native boolean ScreenToClient (long hWnd, POINT lpPoint);
  * @param psc cast=(SCRIPT_CONTROL*)
  * @param pss cast=(SCRIPT_STATE*)
  */
-public static final native int ScriptApplyDigitSubstitution (long psds, SCRIPT_CONTROL psc, SCRIPT_STATE pss);
+public static final native int ScriptApplyDigitSubstitution (SCRIPT_DIGITSUBSTITUTE psds, SCRIPT_CONTROL psc, SCRIPT_STATE pss);
 /**
  * @param pwcChars cast=(const WCHAR *),flags=no_out
  * @param psa cast=(const SCRIPT_ANALYSIS *),flags=no_out

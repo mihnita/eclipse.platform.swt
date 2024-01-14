@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2022 IBM Corporation and others.
+ * Copyright (c) 2000, 2024 IBM Corporation and others.
  *
  * This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
@@ -5060,6 +5060,46 @@ void setSCRIPT_CONTROLFields(JNIEnv *env, jobject lpObject, SCRIPT_CONTROL *lpSt
 	(*env)->SetBooleanField(env, lpObject, SCRIPT_CONTROLFc.fMergeNeutralItems, (jboolean)lpStruct->fMergeNeutralItems);
 	(*env)->SetBooleanField(env, lpObject, SCRIPT_CONTROLFc.fUseStandardBidi, (jboolean)lpStruct->fUseStandardBidi);
 	(*env)->SetIntField(env, lpObject, SCRIPT_CONTROLFc.fReserved, (jint)lpStruct->fReserved);
+}
+#endif
+
+#ifndef NO_SCRIPT_DIGITSUBSTITUTE
+typedef struct SCRIPT_DIGITSUBSTITUTE_FID_CACHE {
+	int cached;
+	jclass clazz;
+	jfieldID NationalDigitLanguage, TraditionalDigitLanguage, DigitSubstitute, dwReserved;
+} SCRIPT_DIGITSUBSTITUTE_FID_CACHE;
+
+SCRIPT_DIGITSUBSTITUTE_FID_CACHE SCRIPT_DIGITSUBSTITUTEFc;
+
+void cacheSCRIPT_DIGITSUBSTITUTEFields(JNIEnv *env, jobject lpObject)
+{
+	if (SCRIPT_DIGITSUBSTITUTEFc.cached) return;
+	SCRIPT_DIGITSUBSTITUTEFc.clazz = (*env)->GetObjectClass(env, lpObject);
+	SCRIPT_DIGITSUBSTITUTEFc.NationalDigitLanguage = (*env)->GetFieldID(env, SCRIPT_DIGITSUBSTITUTEFc.clazz, "NationalDigitLanguage", "I");
+	SCRIPT_DIGITSUBSTITUTEFc.TraditionalDigitLanguage = (*env)->GetFieldID(env, SCRIPT_DIGITSUBSTITUTEFc.clazz, "TraditionalDigitLanguage", "I");
+	SCRIPT_DIGITSUBSTITUTEFc.DigitSubstitute = (*env)->GetFieldID(env, SCRIPT_DIGITSUBSTITUTEFc.clazz, "DigitSubstitute", "B");
+	SCRIPT_DIGITSUBSTITUTEFc.dwReserved = (*env)->GetFieldID(env, SCRIPT_DIGITSUBSTITUTEFc.clazz, "dwReserved", "I");
+	SCRIPT_DIGITSUBSTITUTEFc.cached = 1;
+}
+
+SCRIPT_DIGITSUBSTITUTE *getSCRIPT_DIGITSUBSTITUTEFields(JNIEnv *env, jobject lpObject, SCRIPT_DIGITSUBSTITUTE *lpStruct)
+{
+	if (!SCRIPT_DIGITSUBSTITUTEFc.cached) cacheSCRIPT_DIGITSUBSTITUTEFields(env, lpObject);
+	lpStruct->NationalDigitLanguage = (*env)->GetIntField(env, lpObject, SCRIPT_DIGITSUBSTITUTEFc.NationalDigitLanguage);
+	lpStruct->TraditionalDigitLanguage = (*env)->GetIntField(env, lpObject, SCRIPT_DIGITSUBSTITUTEFc.TraditionalDigitLanguage);
+	lpStruct->DigitSubstitute = (*env)->GetByteField(env, lpObject, SCRIPT_DIGITSUBSTITUTEFc.DigitSubstitute);
+	lpStruct->dwReserved = (*env)->GetIntField(env, lpObject, SCRIPT_DIGITSUBSTITUTEFc.dwReserved);
+	return lpStruct;
+}
+
+void setSCRIPT_DIGITSUBSTITUTEFields(JNIEnv *env, jobject lpObject, SCRIPT_DIGITSUBSTITUTE *lpStruct)
+{
+	if (!SCRIPT_DIGITSUBSTITUTEFc.cached) cacheSCRIPT_DIGITSUBSTITUTEFields(env, lpObject);
+	(*env)->SetIntField(env, lpObject, SCRIPT_DIGITSUBSTITUTEFc.NationalDigitLanguage, (jint)lpStruct->NationalDigitLanguage);
+	(*env)->SetIntField(env, lpObject, SCRIPT_DIGITSUBSTITUTEFc.TraditionalDigitLanguage, (jint)lpStruct->TraditionalDigitLanguage);
+	(*env)->SetByteField(env, lpObject, SCRIPT_DIGITSUBSTITUTEFc.DigitSubstitute, (jbyte)lpStruct->DigitSubstitute);
+	(*env)->SetIntField(env, lpObject, SCRIPT_DIGITSUBSTITUTEFc.dwReserved, (jint)lpStruct->dwReserved);
 }
 #endif
 

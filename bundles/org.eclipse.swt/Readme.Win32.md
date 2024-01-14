@@ -1,3 +1,84 @@
+# TODO: I think this needs big time update
+
+Mentions "Last tested on Win10 64 bit & Java 11. May 2019" (> 4 years ago), JDK 11 (and least tested JDK 9)),
+"To do a 32 bit build" (no more 32 bits for Win SWT).
+
+---
+
+In "Building and Testing locally" there is no `build.xml`. \
+There is a `build.xml` in `binaries\binaries-parent` \
+But it is not visible from Eclipse (filtered out?)
+
+`buildSWT.xml` contains a `build_libraries` as described, so I tried from there.
+
+But `BUILD FAILED` with:
+```
+...\swt-master\git\eclipse.platform.swt\bundles\org.eclipse.swt\buildSWT.xml:235: Failed: ${swt.ws} and ${swt.os} not set
+```
+
+Looks like the right way to do it would be to somehow invoke the `binaries\pom.xml` maven project,
+which calls `binaries\binaries-parent\build.xml`, and that one sets `swt.ws`, `swt.os`, and `swt.arch`.
+
+But I was unable to figure out how to call that from command line in a way that will invoke `buildSWT.xml` properly.
+And I was also unable to make `buildSWT.xml` with `build_libraries` from Eclipse.
+
+So I added `swt.ws`, `swt.os` directly in `buildSWT.xml` (temporary hack):
+```
+<property name="swt.ws" value="win32"/>
+<property name="swt.os" value="win32.x86_64"/>
+```
+
+Then the tasks containing `<script>` fail because:
+> Java 15 has removed Nashorn, you must provide an engine for running JavaScript yourself. GraalVM JavaScript currently is the preferred option.
+
+Added another temporary hack:
+```
+<path id="javax.classpath">
+	<pathelement location="./ant_libs_js/graal-sdk-23.0.2.jar"/>
+	<pathelement location="./ant_libs_js/js-scriptengine-22.3.1.jar"/>
+	<pathelement location="./ant_libs_js/icu4j-72.1.jar"/>
+	<pathelement location="./ant_libs_js/js-23.0.2.jar"/>
+	<pathelement location="./ant_libs_js/regex-23.0.2.jar"/>
+	<pathelement location="./ant_libs_js/truffle-api-23.0.2.jar"/>
+	</path>
+```
+And added the `ant_libs_js/` folder.
+
+Now it fails with
+```
+ERROR: 32-bit builds are no longer supported.
+```
+
+Which comes from `\bundles\org.eclipse.swt\Eclipse SWT PI\win32\library\build.bat`:
+```
+IF NOT "x.%1"=="x.x86_64" (
+	CALL :ECHO "ERROR: 32-bit builds are no longer supported."
+	EXIT /B 1
+)
+```
+
+I inspected the input arguments (`%0`, `%1`, `%2`, `%2` ...), and `%1` is not the platform, is `install` \
+(as invoked from `buildSWT.xml`, task `build_local_win`:
+```
+<target name="build_local_win">
+	...
+	<exec dir="${build_dir}" executable="${build_dir}/build.bat" failonerror="true">
+		<env key="SWT_JAVA_HOME" value="${SWT_JAVA_HOME}"/>
+		<env key="OUTPUT_DIR" value="${win_output_dir}"/>
+		<arg line="${targets}"/>
+		<arg line="${clean}"/>
+	</exec>
+</target>
+```
+
+I had to add two more arguments to the `build.bat` invocation:
+```
+	...
+	<arg line="x86_64"/>
+	<arg line="all"/>
+	...
+```
+
 # About
 
 The document is structured so that you only need to read up to the point that you require, with advanced topics at the bottom.

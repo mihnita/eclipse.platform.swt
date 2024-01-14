@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2022 IBM Corporation and others.
+ * Copyright (c) 2000, 2024 IBM Corporation and others.
  *
  * This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
@@ -2738,6 +2738,7 @@ StyleItem[] itemize () {
 	int length = segmentsText.length();
 	SCRIPT_CONTROL scriptControl = new SCRIPT_CONTROL();
 	SCRIPT_STATE scriptState = new SCRIPT_STATE();
+	SCRIPT_DIGITSUBSTITUTE scriptDigitSubstitute = new SCRIPT_DIGITSUBSTITUTE();
 	final int MAX_ITEM = length + 1;
 
 	if ((resolveTextDirection() & SWT.RIGHT_TO_LEFT) != 0) {
@@ -2745,7 +2746,10 @@ StyleItem[] itemize () {
 		scriptState.fArabicNumContext = true;
 	}
 
-	OS.ScriptApplyDigitSubstitution(0, scriptControl, scriptState);
+	scriptDigitSubstitute.NationalDigitLanguage = OS.LOCALE_USER_DEFAULT;
+	scriptDigitSubstitute.TraditionalDigitLanguage = OS.LOCALE_USER_DEFAULT;
+	scriptDigitSubstitute.DigitSubstitute = OS.SCRIPT_DIGITSUBSTITUTE_NONE;
+	OS.ScriptApplyDigitSubstitution(scriptDigitSubstitute, scriptControl, scriptState);
 
 	long hHeap = OS.GetProcessHeap();
 	// This buffer needs to be one entry bigger than the cMaxItems param to ScriptItemize

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2023 IBM Corporation and others.
+ * Copyright (c) 2000, 2024 IBM Corporation and others.
  *
  * This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
@@ -552,6 +552,7 @@ typedef enum {
 	SAFEARRAY_1sizeof_FUNC,
 	SCRIPT_1ANALYSIS_1sizeof_FUNC,
 	SCRIPT_1CONTROL_1sizeof_FUNC,
+	SCRIPT_1DIGITSUBSTITUTE_1sizeof_FUNC,
 	SCRIPT_1FONTPROPERTIES_1sizeof_FUNC,
 	SCRIPT_1ITEM_1sizeof_FUNC,
 	SCRIPT_1LOGATTR_1sizeof_FUNC,
